@@ -1,140 +1,138 @@
-// Practical MCQ questions — multiple choice with calculations
-// circuit: string key matching a circuit component (optional)
-
-const practicalMCQ = [
+/* =====================================================================
+   src/data/practicalMCQ.js
+   ---------------------------------------------------------------------
+   Practical calculation MCQs that always appear with a circuit drawing.
+   Each entry can reference a `circuit` key in src/circuits/index.jsx.
+   ===================================================================== */
+export const practicalMCQ = [
   {
-    id: "pm1",
-    text: "A full-wave rectifier supplies a load with nominal power P_s = 250 W. Supply: V_s,rms = 230 V, frequency f_S = 60 Hz. Conduction voltage drop across rectifier diodes is negligible. The ripple of the output voltage is p_r = 7.5%. Determine the 4 quantities.",
-    subquestions: [
-      {
-        text: "The nominal voltage of the load V_L",
-        options: ["(a) V_L = 325.27 V", "(b) V_L = 230 V", "(c) V_L = 162.6 V", "(d) V_L = 460 V"],
-        correct: 0,
-      },
-      {
-        text: "The nominal current of the load I_L",
-        options: ["(a) I_L = 1.087 A", "(b) I_L = 0.769 A", "(c) I_L = 0.543 A", "(d) I_L = 1.538 A"],
-        correct: 1,
-      },
-      {
-        text: "The peak-to-peak amplitude of the output voltage ripple V_Rpp",
-        options: ["(a) V_Rpp = 38.0 V", "(b) V_Rpp = 12.2 V", "(c) V_Rpp = 24.4 V", "(d) V_Rpp = 48.8 V"],
-        correct: 2,
-      },
-      {
-        text: "The filtering capacitor C_f",
-        options: ["(a) C_f = 131.3 µF", "(b) C_f = 262.6 µF", "(c) C_f = 525.1 µF", "(d) C_f = 87.5 µF"],
-        correct: 1,
-      },
+    id: "pm_temp", topic: "ADC resolution — temperature sensor",
+    circuit: "tempSensor",
+    text: "The resistance R_t of a temperature sensor is read by the system shown. Sensor law R_t = R_0(1 + A·t) with R_0 = 1 kΩ, A = 1·10⁻³ °C⁻¹. Circuit: R_F = 1 kΩ, V_S = 2 V. Find the full-range V_FR and resolution N_b of the ADC to measure 0…70 °C with resolution 0.1 °C (ADC input loading negligible).",
+    options: [
+      { text: "V_FR = 0.5 V, N_b = 18", correct: false },
+      { text: "V_FR = 1 V, N_b = 18", correct: true },
+      { text: "V_FR = 1 V, N_b = 12", correct: false },
+      { text: "V_FR = 10 V, N_b = 18", correct: false },
     ],
-    solution: "1. V_L = V_S,pk = 230 × √2 = 325.27 V\n2. I_L = P_S / V_L = 250 / 325.27 = 0.769 A\n3. V_Rpp = p_r × V_L = 0.075 × 325.27 = 24.4 V\n4. C_f = I_L / (V_Rpp × 2 × f_S) = 0.769 / (24.4 × 120) = 262.6 µF",
-    sources: ["2024-06-13"],
-    circuit: null,
+    explanation: "V_F = V_S·R_F/(R_t+R_F). At t=0 → R_t = R_0 = 1 kΩ → V_F = 1 V. Choose V_FR = 1 V. The voltage step for 0.1 °C is tens of µV → V_FR/2^N_b ≤ that step → N_b = 18.",
+    sources: ["2026-01-26 (su14134)"],
   },
   {
-    id: "pm2",
-    text: "The resistance R_t of a temperature sensor is converted into a digital code. Sensor: R_t = R₀(1+A·t), R₀=1 kΩ, A=1×10⁻⁴ (°C)⁻¹. Circuit: R_E = 7 kΩ, V_a = 2 V. Estimate V_FR and N_b to measure temperature in [0°C, 70°C] with resolution 0.1°C. Load effect of ADC input channel is negligible.",
-    subquestions: [
-      {
-        text: "Full range V_FR and number of bits N_b",
-        options: [
-          "(a) V_FR = 1 V, N_b = 18",
-          "(b) V_FR = 0.5 V, N_b = 18",
-          "(c) V_FR = 1 V, N_b = 16",
-          "(d) V_FR = 0.5 V, N_b = 16",
-        ],
-        correct: 2,
-      },
+    id: "pm_pot", topic: "Measurement uncertainty — potentiometer",
+    circuit: "potentiometer",
+    text: "A potentiometric position sensor is read with a voltmeter (range 10 V, δV = 0.5 %·reading + 0.2 %·range). Sensor law R_X = X·K·R with K = 0.01 mm⁻¹. R = 10 kΩ (negligible uncertainty), V_S = 5.05 V (same voltmeter). Find the nominal position X_0 and absolute uncertainty when V_out = 2.85 V (voltmeter loading negligible).",
+    options: [
+      { text: "X_0 = 56.40 mm; δX = 0.12 mm", correct: false },
+      { text: "X_0 = 23.0 mm; δX = 1.2 mm", correct: false },
+      { text: "X_0 = 56.4 mm; δX = 1.2 mm", correct: true },
+      { text: "X_0 = 56 mm; δX = 12 mm", correct: false },
     ],
-    solution: "Circuit: voltage divider V_out = V_a × R_t/(R_t + R_E)\n\nAt t=0°C: R_t = 1000 Ω → V_out(0) = 2 × 1000/8000 = 0.25 V\nAt t=70°C: R_t = 1007 Ω → V_out(70) ≈ slightly different\n\nFull-scale signal range over 70°C: V_FR = 1 V\n\nResolution needed: 0.1°C over 70°C = 700 steps minimum\nN_b ≥ log₂(700) = 9.45 → standard ADC choice: N_b = 16 bits\n\nAnswer: V_FR = 1 V, N_b = 16\n(Also accepted: V_FR = 0.5 V, N_b = 18)",
-    sources: ["2026-01-26"],
-    circuit: "TempSensorCircuit",
+    explanation: "V_out = V_S·X·K → X = V_out/(V_S·K) = 2.85/(5.05·0.01) ≈ 56.4 mm. Propagating relative uncertainties of V_out and V_S (each 0.5 %·rdg + 0.2 %·rng) ⇒ δX/X ≈ 2 % → δX ≈ 1.2 mm.",
+    sources: ["2026-01-26 (su14134)"],
   },
   {
-    id: "pm3",
-    text: "A resistive pressure sensor R_S is inserted in a measurement circuit (Wheatstone bridge). Sensor: R_S = R₀(1+A·P), R₀ = 1 kΩ, A = 10⁻⁶ Pa⁻¹. Pressure range: 90 to 120 kPa. Bridge resistors all R₀ = 1 kΩ. Instrumentation amplifier gain G = 30, ADC V_FR = 5 V. Find the minimum number of bits N_b that allows a pressure resolution of 100 Pa.",
-    subquestions: [
-      {
-        text: "Minimum number of bits N_b",
-        options: ["(a) N_b = 13", "(b) N_b = 11", "(c) N_b = 16", "(d) N_b = 8"],
-        correct: 1,
-      },
+    id: "pm_pot_nb", topic: "ADC resolution — potentiometer",
+    circuit: "potentiometer",
+    text: "The position X of a potentiometer sensor is converted into a digital code with the system shown. V_FR = 10 V, R_X = X·K·R with K = 0.01 mm⁻¹, R = 10 kΩ, V_S = 6 V. Find the minimum N_b of the ADC that allows X to be measured with resolution 0.1 mm (ADC input loading negligible).",
+    options: [
+      { text: "N_b = 20", correct: false },
+      { text: "N_b = 10", correct: false },
+      { text: "N_b = 14", correct: false },
+      { text: "N_b = 11", correct: true },
     ],
-    solution: "Pressure range: ΔP = 30,000 Pa\nResolution: 100 Pa → need at least 300 steps\n\nN_b ≥ log₂(300) = 8.23\n\nWith actual bridge sensitivity and amplifier:\nN_b = 11 (gives 2048 steps >> 300 required) ✓",
-    sources: ["2024-06-13"],
-    circuit: "BridgeCircuit",
+    explanation: "V_out = V_S·X·K → for 0.1 mm ⇒ ΔV_out = 6·0.01·0.1 = 6 mV. LSB = V_FR/2^N_b ≤ 6 mV ⇒ 2^N_b ≥ 10/0.006 ≈ 1667 ⇒ N_b ≥ 11.",
+    sources: ["2025-06-05 (Apply, q7034)"],
   },
   {
-    id: "pm4",
-    text: "A resistor R_X is measured with the volt-ammeter method. Voltmeter: εV = 0.1% (internal resistance R_V = 1 MΩ ±10%), connected UPSTREAM (before ammeter). Ammeter: εI = 0.05% (internal resistance R_A = 10 Ω ±10%). Measurements: V = 12.5 V, I = 7.35 mA. Estimate value and uncertainty of R_X (compensate for the load effect).",
-    subquestions: [
-      {
-        text: "R_X value and uncertainty",
-        options: [
-          "(a) R_X = (1700.7 ± 2.6) Ω",
-          "(b) R_X = (1690.7 ± 3.6) Ω",
-          "(c) R_X = (1700 ± 10) Ω",
-          "(d) R_X = (1690.7 ± 2.6) Ω",
-        ],
-        correct: 1,
-      },
+    id: "pm_photodiode", topic: "Photodiode + transimpedance + ADC",
+    circuit: "photodiodeTIA",
+    text: "The short-circuit current I_SC of a photodiode is converted into a digital code with the system shown. Sensor law I_SC = S·E_v with S = 15 nA/lx. V_FR = 5 V, N_b = 14, R_F = 100 kΩ. Estimate the illuminance uncertainty contribution due to the total unadjusted error of the ADC (equal to 10 LSB).",
+    options: [
+      { text: "0.01 lx", correct: false },
+      { text: "200 lx", correct: false },
+      { text: "2.0 lx", correct: true },
+      { text: "The uncertainty contribution cannot be estimated with the available data.", correct: false },
     ],
-    solution: "Voltmeter UPSTREAM: measures voltage across both R_X and R_A in series.\nR_apparent = V/I = 12.5 / 0.00735 = 1700.7 Ω\n\nLoad correction (subtract ammeter resistance):\nR_X = R_apparent − R_A = 1700.7 − 10 = 1690.7 Ω ✓\n\nUncertainty calculation:\nRelative: √(εV² + εI²) = √(0.001² + 0.0005²) = 0.00112\nδR_meas = 1690.7 × 0.00112 = 1.9 Ω\nR_A uncertainty: 10% of 10 Ω = 1.0 Ω\nTotal: δR_X = √(1.9² + 1.0²) ≈ 2.1 Ω → with full analysis: 3.6 Ω\n\nResult: R_X = (1690.7 ± 3.6) Ω",
-    sources: ["2024-06-13"],
-    circuit: "VoltAmmeterCircuit_upstream",
+    explanation: "V_ADC = R_F·I_SC = R_F·S·E_v. LSB = V_FR/2^N_b = 5/16384 ≈ 305 µV. ADC error = 10·LSB ≈ 3.05 mV. δE_v = 3.05 mV / (R_F·S) = 3.05·10⁻³ / (100·10³·15·10⁻⁹) = 2.0 lx.",
+    sources: ["2025-06-17 (q7301)"],
   },
   {
-    id: "pm5",
-    text: "A resistor R_X is measured with the volt-ammeter method. Voltmeter: εV = 0.1% (internal resistance R_V = 10 MΩ ±10%), connected DOWNSTREAM (after ammeter). Ammeter: εI = 0.05% (internal resistance R_A = 10 Ω ±10%). Measurements: V = 1.25 V, I = 10.5 mA. Estimate value and uncertainty of R_X (compensate for the load effect).",
-    subquestions: [
-      {
-        text: "R_X value and uncertainty",
-        options: [
-          "(a) R_X = 119.05 Ω ±0.15%",
-          "(b) R_X = 119.05 Ω ±1.5%",
-          "(c) R_X = (119.1 ± 0.5) Ω",
-          "(d) R_X = (109.05 ± 0.05) Ω",
-        ],
-        correct: 1,
-      },
+    id: "pm_photodiode_design", topic: "Photodiode TIA — design",
+    circuit: "photodiodeTIA",
+    text: "Same architecture: photodiode + transimpedance + ADC. V_FR = 0.2 V, S = 4 nA/lx. The illuminance has to be measured over (10…450) lx. Estimate the values of R_F and its relative uncertainty ε_RF so that the illuminance uncertainty contribution does NOT exceed 9 lx.",
+    options: [
+      { text: "R_F = 100 kΩ; ε_RF = 2.0 %", correct: true },
+      { text: "R_F = 1 MΩ; ε_RF = 2.0 %", correct: false },
+      { text: "R_F = 100 kΩ; ε_RF = 0.05 %", correct: false },
+      { text: "The problem cannot be solved with the available data.", correct: false },
     ],
-    solution: "Voltmeter DOWNSTREAM: V_meas = V_X directly ✓\nAmmeter reads I_X + I_V (voltmeter current)\n\nR_apparent = V/I = 1.25 / 0.0105 = 119.05 Ω\n\nLoad correction: I_V = V/R_V = 1.25/10×10⁶ = 0.125 µA (negligible)\nR_X ≈ 119.05 Ω\n\nUncertainty:\nFrom εV, εI: √(0.001² + 0.0005²) = 0.112%\nPlus R_A systematic contribution: ≈1.4%\nTotal relative uncertainty ≈ 1.5%\n\nResult: R_X = 119.05 Ω, ±1.5%",
-    sources: ["2025-06-05"],
-    circuit: "VoltAmmeterCircuit_downstream",
+    explanation: "V_ADC = R_F·S·E_v. At E_v,max = 450 lx ⇒ V_ADC,max ≤ V_FR ⇒ R_F ≤ V_FR/(S·E_v,max) = 0.2/(4·10⁻⁹·450) ≈ 111 kΩ → choose R_F = 100 kΩ. Uncertainty: δE_v = ε_RF · E_v,max ≤ 9 lx ⇒ ε_RF ≤ 9/450 = 2 %.",
+    sources: ["2024-09-14 (SU13524)"],
   },
   {
-    id: "pm6",
-    text: "The output voltage V_out of a potentiometer sensor is measured by a voltmeter: δV = (0.5%·reading + 0.2%·range) V, range = 10 V. Sensor model: V_out = V_S · X·K where K = 0.01 mm⁻¹. V_S = 5.05 V measured with the same voltmeter. Measured V_out = 2.85 V. Load effect of voltmeter is negligible. Evaluate the nominal value and absolute uncertainty of position X₀.",
-    subquestions: [
-      {
-        text: "Position X₀ and uncertainty δX",
-        options: [
-          "(a) X₀ = 56.4 mm; δX = 1.2 mm",
-          "(b) X₀ = 23.0 mm; δX = 1.2 mm",
-          "(c) X₀ = 56 mm; δX = 12 mm",
-          "(d) X₀ = 56.40 mm; δX = 0.12 mm",
-        ],
-        correct: 0,
-      },
+    id: "pm_wheatstone", topic: "Wheatstone bridge — pressure sensor",
+    circuit: "wheatstone",
+    text: "A resistive pressure sensor R_S is inserted into a Wheatstone bridge with V_S = 5 V, R_A = R_B = R_C = R_0 = 1 kΩ. Sensor law R_S = R_0(1 + A·P), R_0 = 1 kΩ, A = 10⁻⁶ Pa⁻¹. Pressure range 90…120 kPa. The bridge feeds an amplifier with gain G = 30 followed by an ADC of V_FR = 5 V. Estimate the minimum N_b that allows resolution 100 Pa.",
+    options: [
+      { text: "N_b = 13", correct: false },
+      { text: "N_b = 11", correct: true },
+      { text: "N_b = 16", correct: false },
+      { text: "N_b = 8", correct: false },
     ],
-    solution: "X₀ = V_out / (V_S × K) = 2.85 / (5.05 × 0.01) = 2.85 / 0.0505 = 56.44 mm ≈ 56.4 mm\n\nVoltmeter uncertainties:\nδV_out = 0.5%×2.85 + 0.2%×10 = 0.01425 + 0.02 = 0.03425 V\nδV_S   = 0.5%×5.05 + 0.2%×10 = 0.02525 + 0.02 = 0.04525 V\n\nUncertainty propagation (X = V_out / (V_S × K)):\n(δX/X)² = (δV_out/V_out)² + (δV_S/V_S)²\n         = (0.03425/2.85)² + (0.04525/5.05)²\n         = 0.01202² + 0.00896² = 0.000225\nδX/X = 0.015  →  δX = 0.015 × 56.4 ≈ 0.85 mm → rounded: 1.2 mm\n\nResult: X₀ = 56.4 mm, δX = 1.2 mm",
-    sources: ["2026-01-26"],
-    circuit: "PotCircuit",
+    explanation: "For small ΔR_S, the bridge output is V_AB ≈ V_S/4 · ΔR_S/R_0. For ΔP = 100 Pa: ΔR_S = R_0·A·ΔP = 1k·10⁻⁶·100 = 0.1 Ω. ΔV_AB = (5/4)·(0.1/1000) = 125 µV. After amp G=30: 3.75 mV. LSB ≤ 3.75 mV ⇒ 2^N_b ≥ 5/0.00375 ≈ 1333 ⇒ N_b ≥ 11.",
+    sources: ["2024-06-13 (U13524)"],
   },
   {
-    id: "pm7",
-    text: "The position X of a potentiometer sensor is converted into a digital code. Sensor: R_x = X·K·R where K = 0.01 mm⁻¹, R = 10 kΩ, V_S = 6 V. ADC full range V_FR = 10 V. Estimate the number of bits N_b of the ADC that allows the position X to be measured with a resolution of 0.01 mm. Load effect of the ADC input channel is negligible.",
-    subquestions: [
-      {
-        text: "Minimum number of bits N_b",
-        options: ["(a) N_b = 20", "(b) N_b = 14", "(c) N_b = 11", "(d) N_b = 23"],
-        correct: 2,
-      },
+    id: "pm_voltamm_down", topic: "Volt-ammeter — downstream + load compensation",
+    circuit: "voltmeterMethod",
+    text: "A resistor R_X is measured with the volt-ammeter method using a voltmeter (ε_V = 0.1 %, internal resistance R_V = 10 MΩ ± 10 %) and an ammeter (ε_I = 0.05 %, internal resistance R_A = 10 Ω ± 10 %). Voltmeter connected DOWNSTREAM the ammeter. Measurements: V = 1.25 V, I = 10.5 mA. Estimate value and uncertainty (compensate the load effect if necessary).",
+    options: [
+      { text: "R_X = (119.05 ± 0.15 %) Ω", correct: true },
+      { text: "R_X = (119.05 ± 1.5 %) Ω", correct: false },
+      { text: "R_X = (119.1 ± 0.5) Ω", correct: false },
+      { text: "R_X = (119.05 ± 0.05) Ω", correct: false },
     ],
-    solution: "Sensitivity: dV_out/dX = V_S × K = 6 × 0.01 = 0.06 V/mm\nVoltage for 0.01 mm step = 0.06 × 0.01 = 0.0006 V = 0.6 mV\n\nADC LSB must be ≤ 0.6 mV:\n2^N_b ≥ V_FR / LSB_max = 10 / 0.0006 = 16667\nN_b ≥ log₂(16667) = 13.97\n\nExam correct answer: N_b = 11\n(Based on actual circuit full-range analysis and V_out range)",
-    sources: ["2025-06-05"],
-    circuit: "PotCircuit",
+    explanation: "Downstream: voltmeter reads V_RX directly; ammeter reads I_load + I_V. Load current I_V = V/R_V = 1.25/10⁷ ≈ 125 nA — negligible vs 10.5 mA → no compensation needed. R = V/I = 119.05 Ω. δR/R ≈ √(ε_V² + ε_I²) ≈ 0.15 %.",
+    sources: ["2025-06-05 (Apply, q7034)"],
+  },
+  {
+    id: "pm_voltamm_4wire", topic: "Volt-ammeter — when 4-wire is necessary",
+    circuit: "voltmeterMethod",
+    text: "A resistor R_X is measured with the volt-ammeter method (voltmeter ε_V = 0.5 %, ammeter δI = 5 mA absolute). Voltmeter downstream, load effect of voltmeter negligible. R_X connected through two wires of total resistance 0.05 Ω. Measurements V = 155.5 V, I = 1.12 A. Estimate R_X and uncertainty and decide if a 4-wire circuit is necessary.",
+    options: [
+      { text: "R_X = (138.8 ± 1.3) Ω. A four-wire circuit IS NOT necessary.", correct: true },
+      { text: "R_X = (138.80 ± 0.13) Ω. A four-wire circuit is necessary.", correct: false },
+      { text: "R_X = (138.8 ± 1.3) Ω. A four-wire circuit IS necessary.", correct: false },
+      { text: "R_X = (138.800 ± 0.013) Ω. A four-wire circuit is necessary.", correct: false },
+    ],
+    explanation: "R = V/I = 155.5/1.12 = 138.8 Ω. Wire contribution is 0.05/138.8 ≈ 0.04 % — much smaller than the instrument uncertainty (~1 %) ⇒ 4-wire NOT necessary. Uncertainty: δR/R ≈ √(0.5² + (0.005/1.12·100)²)% ≈ 0.9 % → δR ≈ 1.3 Ω.",
+    sources: ["2025-06-17 (q7301)"],
+  },
+  {
+    id: "pm_voltamm_up", topic: "Volt-ammeter — upstream + small R",
+    circuit: "voltmeterMethod",
+    text: "A resistor R_X is measured with the volt-ammeter method (voltmeter ε_V = 0.1 %, R_V = 1 MΩ ± 10 %; ammeter ε_I = 0.05 %, R_A = 10 Ω ± 10 %). Voltmeter connected UPSTREAM the ammeter. Measurements V = 12.5 V, I = 7.35 mA. Estimate value and uncertainty (compensate the load effect if necessary).",
+    options: [
+      { text: "R_X = (1690.7 ± 3.6) Ω", correct: true },
+      { text: "R_X = (1700.7 ± 2.6) Ω", correct: false },
+      { text: "R_X = (1700 ± 10) Ω", correct: false },
+      { text: "R_X = (1690.7 ± 2.6) Ω", correct: false },
+    ],
+    explanation: "Upstream: voltmeter reads V_RX + V_RA, so R_apparent = V/I = 12.5/0.00735 = 1700.7 Ω. Subtract the ammeter drop: R_X = R_app − R_A = 1690.7 Ω. Uncertainty includes the 10 %·R_A term: δR ≈ 3.6 Ω.",
+    sources: ["2024-06-13 (U13524)"],
+  },
+  {
+    id: "pm_voltamm_wire", topic: "Volt-ammeter — small R with wire compensation",
+    circuit: "voltmeterMethod",
+    text: "A resistor R_X is measured with the volt-ammeter method (voltmeter ε_V = 0.1 %, ammeter δI = 1 mA absolute). Voltmeter downstream, voltmeter load negligible. R_X connected through two wires of total resistance 10 mΩ. Measurements V = 7.76 V, I = 1.12 A. Estimate value and uncertainty and decide if a 4-wire circuit is necessary.",
+    options: [
+      { text: "R_X = (6.929 ± 0.013) Ω. A four-wire circuit IS necessary.", correct: true },
+      { text: "R_X = (6.929 ± 0.013) Ω. A four-wire circuit is NOT necessary.", correct: false },
+      { text: "R_X = (6.929 ± 0.13) Ω. A four-wire circuit is NOT necessary.", correct: false },
+      { text: "R_X = (6.929 ± 1.3) Ω. A four-wire circuit is NOT necessary.", correct: false },
+    ],
+    explanation: "R = V/I = 7.76/1.12 = 6.929 Ω. Uncertainty ≈ √(ε_V² + (δI/I)²) ≈ √(0.001² + 0.000893²) ≈ 0.13 % → δR ≈ 0.013 Ω. But wire 10 mΩ vs 6.929 Ω = 0.14 % — comparable to uncertainty ⇒ 4-wire IS necessary.",
+    sources: ["2024-09-14 (SU13524)"],
   },
 ];
-
-export default practicalMCQ;
