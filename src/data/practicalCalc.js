@@ -30,7 +30,15 @@ export const practicalCalc = [
       "Reflected wave returns to the driver at 2 t_P and re-reflects: V₃ = Γ_D·V₂ = −0.429·3.23 = −1.39 V → V_driver(2.5 t_P) = V₁ + V₂ + V₃ = 5.42 V",
     ],
     answers: { "Γ_D": "−0.429", "Γ_T": "0.905", "V_i": "3.57 V", "V_R(1.5 t_P)": "6.803 V", "V_driver(2.5 t_P)": "5.418 V" },
-    sources: ["2026-01-26 (su14134)"],
+    variants: [
+      { given: "R_O = 80 Ω, V_A = 3.3 V, Z∞ = 75 Ω, t_P = 10 ns, R_T = 40 Ω to GND (su14172)", answers: "Γ_D = 0.032 · Γ_T = −0.304 · V_i(0.1 t_P) = 1.597 V · V_R(1.5 t_P) = 2.221 V · V_driver(2.5 t_P) = 1.589 V" },
+      { given: "R_O = 100 Ω, V_A = 3.3 V, Z∞ = 50 Ω, t_P = 10 ns, R_T = 100 Ω to GND (su14190)", answers: "Γ_D = 0.333 · Γ_T = 0.333 · V_i(0.1 t_P) = 1.100 V · V_R(1.5 t_P) = 1.467 V · V_driver(2.5 t_P) = 1.589 V" },
+      { given: "R_O = 80 Ω, V_A = 3.3 V, Z∞ = 75 Ω, t_P = 5 ns, R_T = 1000 Ω to GND (AP)", answers: "Γ_D = 0.032 · Γ_T = 0.860 · V_i(0.1 t_P) = 1.597 V · V_R(1.5 t_P) = 2.97 V · V_driver(2.5 t_P) = 3.015 V" },
+      { given: "R_O = 100 Ω, V_A = 5 V, Z∞ = 75 Ω, t_P = 10 ns, R_T = 100 Ω to GND (file_3)", answers: "Γ_D = 0.143 · Γ_T = 0.143 · V_i(0.1 t_P) = 2.143 V · V_R(1.5 t_P) = 2.449 V · V_driver(2.5 t_P) = 2.493 V" },
+      { given: "R_O = 100 Ω, V_A = 5 V, Z∞ = 50 Ω, t_P = 10 ns, R_T = 40 Ω to GND (mail_studenti su14114)", answers: "Γ_D = 0.333 · Γ_T = −0.111 · V_i(0.1 t_P) = 1.667 V · V_R(1.5 t_P) = 1.481 V · V_driver(2.5 t_P) = 1.42 V" },
+      { given: "R_O = 80 Ω, V_A = 3.3 V, Z∞ = 50 Ω, t_P = 10 ns, R_T = 100 Ω to GND (su14185)", answers: "Γ_D = 0.231 · Γ_T = 0.333 · V_i(0.1 t_P) = 1.269 V · V_R(1.5 t_P) = 1.692 V · V_driver(2.5 t_P) = 1.79 V" },
+    ],
+    sources: ["2026-01-26 (su14134, su14172, AP, file_3, mail_studenti, su14185, su14190 — 7 students, same problem, different parameters)"],
   },
 
   {
@@ -105,9 +113,14 @@ export const practicalCalc = [
     ],
     answers: { "P_Dmax": "4.915 W", "R_thSA": "10.759 °C/W", "η": "25.13 %" },
     variants: [
-      { given: "V_in = 8…18 V, T_Jmax = 150 °C, R_thCS = 0.8 °C/W, T_Amax = 40 °C (su14172)", answers: "P_Dmax = 7.44 W · R_thSA = 9.905 °C/W · η = 18.15 %" },
+      { given: "V_in = 8…18 V, V_out = 3.3 V, I_q = 5 mA, T_Jmax = 150 °C, R_thJC = 4 °C/W, R_thCS = 0.8 °C/W, T_Amax = 40 °C (su14172)", answers: "P_Dmax = 7.44 W · R_thSA = 9.985 °C/W · η = 18.15 %" },
+      { given: "V_in = 8…13 V, V_out = 5 V, I_q = 8 mA, T_Jmax = 125 °C, R_thJC = 3 °C/W, R_thCS = 0.8 °C/W, T_Amax = 50 °C (AP su14168)", answers: "P_Dmax = 4.104 W · R_thSA = 14.475 °C/W · η = 37.66 %" },
+      { given: "V_in = 8…18 V, V_out = 3.3 V, I_q = 5 mA, T_Jmax = 150 °C, R_thJC = 3 °C/W, R_thCS = 0.8 °C/W, T_Amax = 60 °C (file_3 su14511)", answers: "P_Dmax = 7.44 W · R_thSA = 9.641 °C/W · η = 18.15 %" },
+      { given: "V_in = 8…13 V, V_out = 5 V, I_q = 5 mA, T_Jmax = 125 °C, R_thJC = 4 °C/W, R_thCS = 0.5 °C/W, T_Amax = 40 °C (mail_studenti su14114)", answers: "P_Dmax = 4.065 W · R_thSA = 16.41 °C/W · η = 38.08 %" },
+      { given: "V_in = 8…18 V, V_out = 3.3 V, I_q = 8 mA, T_Jmax = 125 °C, R_thJC = 3 °C/W, R_thCS = 0.8 °C/W, T_Amax = 50 °C (su14185)", answers: "P_Dmax = 7.494 W · R_thSA = 6.208 °C/W · η = 18.04 %" },
+      { given: "V_in = 8…18 V, V_out = 3.3 V, I_q = 5 mA, T_Jmax = 150 °C, R_thJC = 3 °C/W, R_thCS = 0.5 °C/W, T_Amax = 40 °C (su14190)", answers: "P_Dmax = 7.44 W · R_thSA = 8.941 °C/W · η = 18.15 %" },
     ],
-    sources: ["2026-01-26 (su14134, su14172)"],
+    sources: ["2026-01-26 (su14134, su14172, AP, file_3, mail_studenti, su14185, su14190 — 7 students, same problem, parametric variants)"],
   },
 
   {

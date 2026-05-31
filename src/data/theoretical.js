@@ -11,17 +11,20 @@
 export const theoretical = [
   /* ─────────────  LINEAR REGULATORS  ───────────── */
   {
-    id: "th_protect", topic: "Linear regulators — current limiting",
-    text: "Consider the current-limiting protection circuit for a series linear voltage regulator employing a current-sensing resistor R_S and a protection transistor. Which statement correctly describes its operation?",
+    id: "th_protect", topic: "Linear regulators — current limiting", multi: true,
+    text: "Consider the current-limiting protection circuit for a series linear voltage regulator employing a current-sensing resistor R_S and a protection transistor. Which statement correctly describes its operation? — different correct statements across students.",
     options: [
       { text: "When the voltage drop across R_S reaches the activation threshold, the protection transistor turns on and diverts the drive current away from the base of the pass element, preventing further increase in the output current.", correct: true },
+      { text: "The sensing resistor R_S is connected in series with the emitter of the pass transistor (in the output path) to directly monitor the current delivered to the load.", correct: true },
+      { text: "The maximum output current I_O,max is determined by the resistance R_S and the base-emitter turn-on voltage of the protection transistor, following the approximate relationship I_O,max ≈ 0.7 V / R_S.", correct: true },
       { text: "The protection transistor is connected in series with the pass element and the load, acting as a switch that physically disconnects the output when the current limit is exceeded.", correct: false },
       { text: "The current limit I_O,max is primarily determined by the current gain β of the pass transistor and is independent of R_S.", correct: false },
       { text: "R_S is placed in parallel with the base–emitter junction of the pass transistor to monitor the drive voltage rather than the load current.", correct: false },
       { text: "To minimize power loss the circuit is designed so the drop across R_S at maximum current equals the output voltage V_O.", correct: false },
+      { text: "This protection configuration is known as foldback limiting because it reduces the short-circuit current to a value significantly lower than the maximum rated current I_O,max.", correct: false },
     ],
-    explanation: "Foldback/limiting uses negative feedback: the drop across R_S (in series with the output current) turns on the protection transistor, which shunts the base drive of the pass element. The limit is set by R_S and the protection transistor's turn-on voltage (≈0.6–0.7 V), independent of β.",
-    sources: ["2026-01-26 (su14134, su14172)"],
+    explanation: "Three valid ways to describe the same circuit: (a) the protection transistor's base–emitter junction is across R_S; when I_O·R_S ≈ V_BE,on (~0.7 V), the protection transistor turns on and steals base drive from the pass transistor, capping I_O — this gives the formula I_O,max ≈ 0.7 V / R_S; (b) R_S sits in series with the pass transistor's emitter (= in the output path) so the current flowing in it IS the load current. Foldback limiting is a DIFFERENT circuit (uses extra resistors) — not what this basic limiter does.",
+    sources: ["2026-01-26 (su14134, su14172, file_3 → R_S→threshold→divert; AP, mail_studenti → R_S in series with emitter; su14185 → I_O,max ≈ 0.7/R_S)"],
   },
   {
     id: "th_linreg_chars", topic: "Linear regulators — series vs parallel", multi: true,
@@ -46,13 +49,14 @@ export const theoretical = [
     options: [
       { text: "The voltage conversion ratio is V_O/V_I = −D/(1−D): the output polarity is inverted and its magnitude can be smaller OR larger than the input.", correct: true },
       { text: "Energy transfer from the inductor to the load occurs exclusively during T_OFF, when the inductor's magnetic field collapses and forces current through the forward-biased diode.", correct: true },
+      { text: "During the ON interval T_ON, the inductor is connected directly to the input source V_I to store energy, while the output capacitor alone supplies the necessary current to the load (the diode is reverse-biased, isolating input from output).", correct: true },
       { text: "During T_ON, current flows from V_I through the inductor and directly into the load, providing simultaneous storage and delivery.", correct: false },
       { text: "The output magnitude V_O is always strictly greater than V_I, since the inductor boosts the source potential.", correct: false },
       { text: "The output is V_O = D·V_I, so it is always a fraction of the input with the same polarity.", correct: false },
       { text: "The conversion ratio is V_O/V_I = D/(1−D), giving a positive output with the same polarity as the input.", correct: false },
     ],
     explanation: "Buck-boost stores energy in L during T_ON (input disconnected from load) and releases it through the diode during T_OFF. Steady-state ratio V_O/V_I = −D/(1−D): inverted polarity, |V_O|<|V_I| for D<0.5 (buck), > for D>0.5 (boost).",
-    sources: ["2026-01-26 (su14134 → V_O/V_I; su14172 → energy during OFF)"],
+    sources: ["2026-01-26 (su14134 → V_O/V_I=−D/(1−D); su14172, su14190, AP, file_3, mail_studenti → OFF interval; su14185 → ON: cap supplies load)"],
   },
   {
     id: "th_sw_duty", topic: "Switching regulators — duty-cycle relationships", multi: true,
@@ -83,16 +87,19 @@ export const theoretical = [
 
   /* ─────────────  DATA ACQUISITION / ADC  ───────────── */
   {
-    id: "th_mux", topic: "Data acquisition — analog multiplexer",
-    text: "A multi-channel A/D front-end uses a MOS/CMOS analog multiplexer feeding a shared sample-and-hold and ADC; each channel may have its own conditioning amplifier and anti-alias filter. Which statement is correct?",
+    id: "th_mux", topic: "Data acquisition — analog multiplexer", multi: true,
+    text: "A multi-channel A/D front-end uses a MOS/CMOS analog multiplexer feeding a shared sample-and-hold and ADC; each channel may have its own conditioning amplifier and anti-alias filter. Which statement is correct? — different correct statements across students.",
     options: [
       { text: "Placing the multiplexer AFTER the per-channel anti-alias filters prevents the multiplexing operation from reshaping low-frequency inputs into higher-frequency components that would otherwise need filtering.", correct: true },
+      { text: "The sum of OFF-state leakage currents I_OFF from unselected channels can produce an output offset voltage, and this offset tends to be more critical when N is large or when the effective output resistance is high.", correct: true },
+      { text: "In the ON state, the multiplexer equivalent resistance R_ON can create a gain error because it forms a voltage divider with the load resistance R_L, so the transferred voltage approaches the input value only when R_L ≫ R_ON.", correct: true },
       { text: "Increasing R_ON generally improves settling time because the larger resistance limits current spikes into the load capacitance.", correct: false },
       { text: "The dominant effect of R_ON is to increase the output offset, because R_ON forces a fixed leakage current proportional to the selected input voltage.", correct: false },
       { text: "A tracking A/D converter after the multiplexer is always safe because each conversion depends only on the instantaneous selected input.", correct: false },
+      { text: "The leakage currents I_OFF of unselected channels cancel each other by symmetry, so the net offset at the multiplexer output is approximately zero even for large N.", correct: false },
     ],
-    explanation: "Time-multiplexing turns slow signals into sampled (faster) sequences, so anti-alias filtering must precede the mux. R_ON adds series resistance → attenuation and slower settling. A tracking ADC is unsafe because its result depends on the previous channel.",
-    sources: ["2026-01-26 (su14134)"],
+    explanation: "Time-multiplexing turns slow signals into sampled (faster) sequences, so anti-alias filtering must precede the mux. R_ON adds series resistance — together with the input impedance of the next stage R_L it forms a divider; the transferred amplitude approaches the true input value only when R_L ≫ R_ON. Off-state leakage from N−1 unselected channels sums at the output node and creates an offset that grows with N and with output impedance. A tracking ADC is unsafe because its result depends on the previous channel.",
+    sources: ["2026-01-26 (su14134 → anti-alias placement; su14172 → I_OFF offset; file_3, mail_studenti, su14185 → R_ON gain divider)"],
   },
   {
     id: "th_snr", topic: "ADC — quantization SNR",
@@ -213,16 +220,20 @@ export const theoretical = [
 
   /* ─────────────  MEMORY  ───────────── */
   {
-    id: "th_flash", topic: "Non-volatile memory — flash",
-    text: "For non-volatile floating-gate MOS memories (flash, serial flash), which statement is correct?",
+    id: "th_flash", topic: "Non-volatile memory — flash", multi: true,
+    text: "For non-volatile floating-gate MOS memories (flash, serial flash), which statement is correct? — different correct statements across students.",
     options: [
       { text: "In a flash memory, a WRITE (PROGRAM) operation changes a stored bit from 1 to 0.", correct: true },
+      { text: "In NAND flash, the base unit for READ and WRITE is a page, whereas ERASE is performed on a block.", correct: true },
+      { text: "A serial flash accessed through SPI typically uses CS_n, SI, SO, and SCK signals to transfer data serially, one bit at a time.", correct: true },
       { text: "NOR flash is optimized for sequential page access and is mainly used for sequential data storage.", correct: false },
       { text: "Programming a floating-gate MOS reduces V_TH, making the device easier to turn on for a given gate voltage.", correct: false },
       { text: "Serial flash reduces board connections because it transfers several data bits in parallel over SI and SO simultaneously.", correct: false },
+      { text: "In NAND flash, the base unit for ERASE is a page, while READ and WRITE are performed on blocks.", correct: false },
+      { text: "In a flash memory, an ERASE operation changes only the addressed bit from 0 to 1.", correct: false },
     ],
-    explanation: "Programming adds charge to the floating gate, which RAISES V_TH (state '0'); erase brings it back to '1'. NOR is random-access (code), NAND is sequential/high-density. SI/SO are serial lines, not a parallel bus.",
-    sources: ["2026-01-26 (su14134)"],
+    explanation: "Programming adds charge to the floating gate → V_TH RISES (the bit goes from '1' to '0'). Erase removes charge — done in whole BLOCKS only — so the bit goes from '0' back to '1'. Read and write operate at the smaller PAGE granularity in NAND. NOR is random-access (used for code execution), NAND is sequential/high-density (mass storage). SI/SO are serial lines, not parallel.",
+    sources: ["2026-01-26 (su14134, file_3 → WRITE = 1→0; su14172, su14190, mail_studenti, su14185 → NAND page/block; AP → serial flash SPI signals)"],
   },
   {
     id: "th_memcells", topic: "Memory cells — flash / DRAM / CAM",
@@ -237,16 +248,20 @@ export const theoretical = [
     sources: ["2025-06-17 (q7301)"],
   },
   {
-    id: "th_sram", topic: "Volatile memory — DRAM vs SRAM",
-    text: "Which statement about volatile semiconductor memories (DRAM, SRAM) is correct?",
+    id: "th_sram", topic: "Volatile memory — DRAM vs SRAM", multi: true,
+    text: "Which statement about volatile semiconductor memories (DRAM, SRAM) is correct? — different correct statements across students.",
     options: [
       { text: "SRAM cells are built from a bistable latch of six transistors and retain data indefinitely as long as V_DD is maintained, without periodic refresh.", correct: true },
-      { text: "SRAM relies on a floating-gate transistor to store charge, giving it higher density than DRAM but needing higher write voltages.", correct: false },
+      { text: "While DRAM achieves significantly higher integration density and lower cost per bit due to its compact one-transistor-one-capacitor cell structure, it generally offers slower access times compared to SRAM due to the complexity of its reading and refreshing operations.", correct: true },
+      { text: "The read operation in a standard DRAM cell is considered destructive because the charge transfer between the storage capacitor C_S and the bitline capacitance C_BL alters the stored voltage, necessitating a rewrite phase to restore the data.", correct: true },
+      { text: "SRAM cells rely on a floating-gate transistor to store charge, giving them higher density than DRAM but needing higher write voltages.", correct: false },
       { text: "DRAM access is faster than SRAM because the single-transistor cell has lower parasitic capacitance and a more direct path to the output.", correct: false },
       { text: "Reading an SRAM cell is destructive, discharging the bitlines and requiring a precharge + restore.", correct: false },
+      { text: "A periodic refresh operation is required for SRAM cells to prevent the bistable latch from flipping its state due to thermal noise and sub-threshold leakage currents in the MOS transistors.", correct: false },
+      { text: "The logic state of a DRAM cell is stored in the gate capacitance C_g of the pass transistor, which is large enough to hold the charge for several seconds without needing a refresh.", correct: false },
     ],
-    explanation: "SRAM = 6T cross-coupled latch, static, no refresh, faster, larger area. Floating gates belong to non-volatile memories. DRAM read is the destructive one (charge sharing on the bitline, small swings ~250 mV, needs precharge + restore).",
-    sources: ["2026-01-26 (su14134, su14172)"],
+    explanation: "SRAM = 6T cross-coupled latch, static, no refresh, fast, larger area, higher cost/bit. DRAM = 1T1C, dense and cheap, but its destructive read (charge sharing, ~250 mV sense, precharge + restore) and the refresh requirement make access slower than SRAM. Floating gates are non-volatile, not SRAM. Refresh is a DRAM feature, not SRAM.",
+    sources: ["2026-01-26 (su14134 → SRAM 6T latch; su14172, su14190 → DRAM denser/slower; file_3, mail_studenti, su14185 → DRAM destructive read)"],
   },
   {
     id: "th_dram_read", topic: "DRAM — read mechanics",
@@ -263,16 +278,20 @@ export const theoretical = [
 
   /* ─────────────  DIGITAL DESIGN  ───────────── */
   {
-    id: "th_threestate", topic: "Digital output stages — three-state bus",
-    text: "A shared digital node must be driven by several devices at different times without conflict while keeping valid logic levels. Which statement is correct?",
+    id: "th_threestate", topic: "Digital output stages — shared node strategies", multi: true,
+    text: "A shared digital node must be driven by several devices at different times without electrical conflict while keeping valid logic levels. Which statement is correct? — different correct statements across students.",
     options: [
       { text: "A bus built with three-state outputs requires mutually exclusive enable signals OE, so that only one driver is active at a time when several outputs share the same node.", correct: true },
+      { text: "In an open-drain output, the low state is forced by connecting the node to GND, while the high state is obtained through an external pull-up resistor R_PU to V_OH.", correct: true },
+      { text: "In a three-state output, OE = 0 forces the output to Z (high impedance), and the resulting leakage current I_OZ is typically comparable to logic input currents.", correct: true },
       { text: "Wired sharing is best done by directly connecting several totem-pole outputs together, because their low output resistance prevents conflicts.", correct: false },
       { text: "In a three-state output, OE = 0 forces the output to V_OH so the node stays high even when no device is selected.", correct: false },
       { text: "A three-state bus is safe even if two devices drive opposite levels, because contention is resolved by the driver providing the larger V_OH.", correct: false },
+      { text: "With open-drain outputs, electrical conflict occurs whenever two devices simultaneously pull the node low through their internal switches.", correct: false },
+      { text: "The leakage current I_OZ of a disabled three-state output is expected to be on the same order as the active drive currents I_OL and I_OH.", correct: false },
     ],
-    explanation: "Totem-pole outputs driven to opposite levels create a low-impedance conflict. Three-state outputs solve this only if exactly one OE is active at a time; OE inactive puts the output in the high-impedance Z state (not a forced high).",
-    sources: ["2026-01-26 (su14134)"],
+    explanation: "Three valid strategies for sharing a digital node: (1) three-state outputs with exclusive OE — only one driver active at a time, disabled drivers go to high-Z (I_OZ ≈ input-current level, much smaller than I_OL/I_OH); (2) open-drain outputs with a single external pull-up — drivers can only pull low, the resistor pulls high. Totem-pole outputs cannot share a node — opposite levels create a low-impedance short.",
+    sources: ["2026-01-26 (su14134 → 3-state mutually-exclusive OE; su14172 → open-drain pull-up; su14190 → 3-state OE=0 → Z, low I_OZ)"],
   },
   {
     id: "th_opendrain", topic: "Digital output stages — open-drain",
@@ -400,17 +419,19 @@ export const theoretical = [
 
   /* ─────────────  TIMING / PROTOCOLS  ───────────── */
   {
-    id: "th_handshake", topic: "Register transfer — handshake (write)",
-    text: "A point-to-point write transfer uses an information signal INF, a strobe STB and a confirmation ACK. Which statement correctly relates t_SU, t_H, the skew t_K and t_TXmax?",
+    id: "th_handshake", topic: "Register transfer — handshake (write)", multi: true,
+    text: "A point-to-point write transfer uses an information signal INF, a strobe STB and a confirmation ACK. Which statement correctly relates t_SU, t_H, the skew t_K and t_TXmax? — different correct statements across students.",
     options: [
       { text: "In an asynchronous write cycle with handshake, the source can be timed using only t_K, while the destination guarantees its own t_SU and t_H before asserting ACK.", correct: true },
+      { text: "For an asynchronous write cycle with handshake, the minimum cycle time includes a term proportional to 4·t_TXmax due to signal propagation and confirmation across the channel.", correct: true },
       { text: "In an asynchronous write cycle with handshake, the source must wait t_SU + t_H before asserting STB because the destination cannot ensure register timing internally.", correct: false },
       { text: "In an asynchronous write cycle with handshake, ACK is generated by the source to indicate completion to the destination.", correct: false },
       { text: "In a source-synchronous write transfer the cycle duration is limited by 2·t_TXmax + 2·t_K because clock and data propagate in opposite directions.", correct: false },
       { text: "Reducing t_K affects only the data latency and does not change the maximum cadence of a source-synchronous write protocol.", correct: false },
+      { text: "In a synchronous write cycle, the minimum cycle time depends on t_TXmax but not on t_K.", correct: false },
     ],
-    explanation: "Handshake: the receiver meets its own setup/hold internally and asserts ACK only after safely capturing the data, so the source needs no hard-coded t_SU/t_H. Source-synchronous: clock travels WITH the data (same direction) → only t_K limits cadence, so reducing t_K improves it.",
-    sources: ["2026-01-26 (su14134, su14172)"],
+    explanation: "Handshake (asynchronous): the receiver meets its own setup/hold internally and asserts ACK after safely capturing the data — so the source needs no t_SU/t_H. The cycle however waits for the request to travel out AND ACK to travel back, so a 4·t_TXmax term appears (request out + setup at destination + ACK back). Source-synchronous: clock travels WITH the data (same direction), so only t_K limits cadence and reducing t_K does improve cadence.",
+    sources: ["2026-01-26 (su14134, su14172, file_3, mail_studenti, su14185, su14190 → ACK option; AP → 4·t_TXmax formulation)"],
   },
   {
     id: "th_cycle_compare", topic: "Synchronization — async vs source-sync cycle duration", multi: true,
