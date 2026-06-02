@@ -5,10 +5,18 @@
    with search + bookmark filter).
    ===================================================================== */
 import React, { useState } from "react";
-import { ThCard, PmCard, PcCard } from "../components";
+import { ThCard, PmCard, PcCard, SapCard } from "../components";
 import { theoretical }   from "../data/theoretical";
 import { practicalMCQ }  from "../data/practicalMCQ";
 import { practicalCalc } from "../data/practicalCalc";
+import { sapQuestions, sapTopics } from "../data/sap";
+
+const SAP = {
+  id: "sap", code: "SAP",
+  name: "Signal Analysis & Processing",
+  accent: "#155e63",
+  sessions: ["2025-02-07", "2025-06-03", "2025-08-29", "2026-02-05"],
+};
 
 const C = {
   ink: "#1c2b3a", navy: "#16324f", paper: "#f6f2e9", line: "#cdbfa6",
@@ -30,7 +38,7 @@ const TABS = {
   practicalCalc: { t: "⚡ Calculations",   c: "#7a2c63" },
 };
 
-export const HomePage = ({ go, counts }) => (
+export const HomePage = ({ go, goSap, counts }) => (
   <div style={{ padding: "44px 22px", maxWidth: 760, margin: "0 auto" }}>
     <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: 4, color: C.mut, textTransform: "uppercase" }}>Politecnico di Torino</div>
     <h1 style={{ fontFamily: "Georgia, serif", fontSize: 38, color: C.navy, margin: "6px 0 4px", fontWeight: 700, letterSpacing: -0.5 }}>Exam Study Platform</h1>
@@ -52,6 +60,20 @@ export const HomePage = ({ go, counts }) => (
         ].map((p, i) => (
           <span key={i} style={{ background: p[1], color: p[2], borderRadius: 20, padding: "4px 12px", fontSize: 12.5, fontWeight: 600 }}>{p[0]}</span>
         ))}
+      </div>
+    </button>
+    <button onClick={goSap} style={{ width: "100%", textAlign: "left", background: C.card, border: `1.5px solid ${SAP.accent}`, borderRadius: 14, padding: 22, cursor: "pointer", boxShadow: "4px 4px 0 #d7e6e4", marginTop: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: 2, color: SAP.accent }}>{SAP.code}</div>
+          <div style={{ fontFamily: "Georgia, serif", fontSize: 22, color: SAP.accent, fontWeight: 700 }}>{SAP.name}</div>
+          <div style={{ fontSize: 12, color: C.mut, marginTop: 4 }}>Sessions: {SAP.sessions.join("  ·  ")}</div>
+        </div>
+        <span style={{ fontSize: 26, color: SAP.accent }}>→</span>
+      </div>
+      <div style={{ display: "flex", gap: 8, marginTop: 16, flexWrap: "wrap" }}>
+        <span style={{ background: "#d8f0f1", color: SAP.accent, borderRadius: 20, padding: "4px 12px", fontSize: 12.5, fontWeight: 600 }}>📊 {sapQuestions.length} Questions</span>
+        <span style={{ background: "#e4f1e8", color: C.green, borderRadius: 20, padding: "4px 12px", fontSize: 12.5, fontWeight: 600 }}>🗂 {sapTopics.length} Topics</span>
       </div>
     </button>
     <div style={{ marginTop: 18, fontSize: 12, color: C.mut, lineHeight: 1.6 }}>
@@ -89,6 +111,44 @@ export const SubjectPage = ({ back, saved, toggleSave }) => {
         </div>
         {list.length === 0 && <div style={{ color: C.mut, textAlign: "center", padding: 40 }}>No questions match.</div>}
         {list.map((q) => <Card key={q.id} q={q} saved={saved.includes(q.id)} toggleSave={() => toggleSave(q.id)} />)}
+      </div>
+    </div>
+  );
+};
+
+export const SapPage = ({ back, saved, toggleSave }) => {
+  const [search, setSearch]       = useState("");
+  const [onlySaved, setOnlySaved] = useState(false);
+  const list = sapQuestions.filter((q) => {
+    const hay = ((q.text || "") + (q.topic || "") + (q.options || []).map((o) => o.text).join("")).toLowerCase();
+    if (search   && !hay.includes(search.toLowerCase())) return false;
+    if (onlySaved && !saved.includes(q.id))              return false;
+    return true;
+  });
+  return (
+    <div>
+      <div style={{ background: SAP.accent, color: "#fff", padding: "12px 18px", display: "flex", alignItems: "center", gap: 12, position: "sticky", top: 0, zIndex: 10 }}>
+        <button onClick={back} style={{ background: "rgba(255,255,255,0.18)", border: "none", color: "#fff", borderRadius: 6, padding: "4px 12px", cursor: "pointer", fontSize: 13 }}>← Home</button>
+        <div style={{ flex: 1, fontFamily: "Georgia, serif", fontSize: 16, fontWeight: 600 }}>{SAP.name}</div>
+      </div>
+      <div style={{ padding: "16px 16px 60px", maxWidth: 760, margin: "0 auto" }}>
+        <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search questions…" style={{ flex: 1, padding: "9px 12px", borderRadius: 8, border: `1.5px solid ${C.line}`, fontSize: 13, background: "#fff", color: C.ink }} />
+          <button onClick={() => setOnlySaved(!onlySaved)} style={{ border: `1.5px solid ${onlySaved ? C.amber : C.line}`, background: onlySaved ? "#efe7d6" : "#fff", color: onlySaved ? C.amber : C.mut, borderRadius: 8, padding: "0 14px", cursor: "pointer", fontSize: 13 }}>★ Saved</button>
+        </div>
+        {list.length === 0 && <div style={{ color: C.mut, textAlign: "center", padding: 40 }}>No questions match.</div>}
+        {sapTopics.map((topic) => {
+          const qs = list.filter((q) => q.topic === topic);
+          if (qs.length === 0) return null;
+          return (
+            <div key={topic}>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 15, fontWeight: 700, color: SAP.accent, borderBottom: `2px solid ${SAP.accent}`, paddingBottom: 4, margin: "20px 0 10px" }}>
+                {topic} <span style={{ fontSize: 11, color: C.mut, fontFamily: "'JetBrains Mono', monospace" }}>({qs.length})</span>
+              </div>
+              {qs.map((q) => <SapCard key={q.id} q={q} saved={saved.includes(q.id)} toggleSave={() => toggleSave(q.id)} />)}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

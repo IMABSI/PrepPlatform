@@ -7,7 +7,7 @@
    src/views/ as named.
    ===================================================================== */
 import React, { useState, useEffect } from "react";
-import { HomePage, SubjectPage, DB } from "./views";
+import { HomePage, SubjectPage, SapPage, DB } from "./views";
 
 /* ── tiny persistence shim ───────────────────────────────────────────
    Tries window.storage (Claude artifact host) first, then localStorage
@@ -57,9 +57,19 @@ export default function App() {
         * { box-sizing: border-box; }
         button:focus { outline: none; }
       `}</style>
-      {page === "home"
-        ? <HomePage    go={() => setPage("subject")} counts={counts} />
-        : <SubjectPage back={() => setPage("home")}  saved={saved} toggleSave={toggleSave} />}
+      {page === "home" && (
+        <HomePage
+          go={() => setPage("subject")}
+          goSap={() => setPage("sap")}
+          counts={counts}
+        />
+      )}
+      {page === "subject" && (
+        <SubjectPage back={() => setPage("home")} saved={saved} toggleSave={toggleSave} />
+      )}
+      {page === "sap" && (
+        <SapPage back={() => setPage("home")} saved={saved} toggleSave={toggleSave} />
+      )}
     </div>
   );
 }

@@ -163,3 +163,36 @@ export const PcCard = ({ q, saved, toggleSave }) => {
     </div>
   );
 };
+/* ───── SAP card (Signal Analysis & Processing — MCQ with derived-answer flag) ───── */
+export const SapCard = ({ q, saved, toggleSave }) => {
+  const [show, setShow] = useState(false);
+  const [pick, setPick] = useState(-1);
+  return (
+    <div style={card}>
+      <div style={cardHead}>
+        <span style={{ ...topicTag, background: "#d8f0f1", color: "#155e63" }}>{q.topic}</span>
+        <StarBtn on={saved} onClick={toggleSave} />
+      </div>
+      <div style={qText}>{q.text}</div>
+      {q.verify && <div style={{ ...selectHint, color: C.amber }}>⚠ Derived answer — verify against your Fourier/Z tables</div>}
+      <div style={{ display: "flex", flexDirection: "column", gap: 7, marginTop: 8 }}>
+        {q.options.map((o, i) => {
+          let bg = "#fff", bd = C.line, mark = String.fromCharCode(97 + i) + ")";
+          if (show) {
+            if (o.correct)       { bg = C.greenBg; bd = C.green; mark = "✓"; }
+            else if (i === pick) { bg = C.redBg;   bd = C.red;   mark = "✗"; }
+          } else if (i === pick) { bg = "#efe7d6"; bd = C.amber; }
+          return (
+            <button key={i} onClick={() => !show && setPick(i)} style={{ textAlign: "left", background: bg, border: `1.5px solid ${bd}`, borderRadius: 8, padding: "9px 12px", cursor: show ? "default" : "pointer", fontSize: 13.5, lineHeight: 1.5, color: C.ink, fontFamily: "'JetBrains Mono', monospace", display: "flex", gap: 8 }}>
+              <span style={{ fontWeight: 700, color: show && o.correct ? C.green : C.mut }}>{mark}</span>
+              <span>{o.text}</span>
+            </button>
+          );
+        })}
+      </div>
+      <button onClick={() => setShow(!show)} style={showBtn}>{show ? "Hide solution" : "Show solution"}</button>
+      {show && q.explanation && <div style={explBox}><b style={{ color: C.navy }}>Solution: </b>{q.explanation}</div>}
+      {show && <Sources list={q.sources} />}
+    </div>
+  );
+};

@@ -2,9 +2,9 @@ import { useState } from "react";
 import ThCard from "../components/ThCard";
 import PmCard from "../components/PmCard";
 import PcCard from "../components/PcCard";
-import theoretical from "../data/theoretical";
-import practicalMCQ from "../data/practicalMCQ";
-import practicalCalc from "../data/practicalCalc";
+import { theoretical } from "../data/theoretical";
+import { practicalMCQ } from "../data/practicalMCQ";
+import { practicalCalc } from "../data/practicalCalc";
 
 const TABS = {
   theoretical: { label: "Theoretical", emoji: "📚", color: "#1a3a5c" },

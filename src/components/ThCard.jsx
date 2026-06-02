@@ -6,6 +6,17 @@ export default function ThCard({ q, idx, saved, toggle }) {
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
 
+  // Supports BOTH formats: options as [{text, correct}]  OR  ["string"] + q.correct[]
+  const opts = q.options || [];
+  const getText = (opt) => (opt && typeof opt === "object" ? opt.text : opt);
+  const isCorrect = (opt, i) =>
+    opt && typeof opt === "object" ? !!opt.correct : (q.correct || []).includes(i);
+  const multi = q.multi ?? q.multipleCorrect;
+  const correctLetters = opts
+    .map((opt, i) => (isCorrect(opt, i) ? String.fromCharCode(65 + i) : null))
+    .filter(Boolean)
+    .join(", ");
+
   return (
     <div style={{ border: "1px solid #e0e0e0", borderRadius: 8, marginBottom: 8, background: "#fff", overflow: "hidden" }}>
       {/* Header */}
@@ -18,7 +29,7 @@ export default function ThCard({ q, idx, saved, toggle }) {
         </span>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 14, lineHeight: 1.55, color: "#222" }}>{q.text}</div>
-          {q.multipleCorrect && (
+          {multi && (
             <span style={{ display: "inline-block", marginTop: 4, background: "#fff3cd", color: "#856404", borderRadius: 4, padding: "1px 8px", fontSize: 11 }}>
               ⚠️ Select ALL correct answers
             </span>
@@ -33,27 +44,27 @@ export default function ThCard({ q, idx, saved, toggle }) {
       {/* Expanded content */}
       {open && (
         <div style={{ borderTop: "1px solid #f0f0f0", padding: "10px 14px" }}>
-          {q.options.map((opt, i) => (
+          {opts.map((opt, i) => (
             <div
               key={i}
               style={{
                 display: "flex", alignItems: "flex-start", gap: 8,
                 padding: "7px 10px", borderRadius: 6, marginBottom: 5,
-                background: show ? (q.correct.includes(i) ? "#edf8f0" : "#fafafa") : "#fafafa",
-                border: show ? (q.correct.includes(i) ? "1.5px solid #3a9a60" : "1px solid #eee") : "1px solid #eee",
+                background: show ? (isCorrect(opt, i) ? "#edf8f0" : "#fafafa") : "#fafafa",
+                border: show ? (isCorrect(opt, i) ? "1.5px solid #3a9a60" : "1px solid #eee") : "1px solid #eee",
               }}
             >
               <span style={{
                 width: 22, height: 22, borderRadius: "50%",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: 11, fontWeight: 600, flexShrink: 0,
-                background: show ? (q.correct.includes(i) ? "#3a9a60" : "#ddd") : "#ddd",
-                color: show ? (q.correct.includes(i) ? "#fff" : "#555") : "#555",
+                background: show ? (isCorrect(opt, i) ? "#3a9a60" : "#ddd") : "#ddd",
+                color: show ? (isCorrect(opt, i) ? "#fff" : "#555") : "#555",
               }}>
                 {String.fromCharCode(65 + i)}
               </span>
-              <span style={{ fontSize: 13, lineHeight: 1.5, color: "#333", flex: 1 }}>{opt}</span>
-              {show && q.correct.includes(i) && (
+              <span style={{ fontSize: 13, lineHeight: 1.5, color: "#333", flex: 1 }}>{getText(opt)}</span>
+              {show && isCorrect(opt, i) && (
                 <span style={{ color: "#3a9a60", fontSize: 16, flexShrink: 0 }}>✓</span>
               )}
             </div>
@@ -66,9 +77,9 @@ export default function ThCard({ q, idx, saved, toggle }) {
             >
               {show ? "Hide Answer" : "Show Answer"}
             </button>
-            {show && (
+            {show && correctLetters && (
               <span style={{ fontSize: 13, color: "#3a9a60", fontWeight: 600 }}>
-                Correct: {q.correct.map((i) => String.fromCharCode(65 + i)).join(", ")}
+                Correct: {correctLetters}
               </span>
             )}
           </div>
